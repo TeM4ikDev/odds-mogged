@@ -1,0 +1,70 @@
+# --- Dependencies ---
+/vendor/
+/node_modules/
+
+# --- Build / packaging ---
+/dist/
+*.zip
+*.map
+
+# --- Local environment ---
+.env
+.env.*
+!.env.example
+.wp-env.override.json
+/wordpress/
+/wp-content/
+*.sql
+*.sql.gz
+
+# --- Tests & tooling caches ---
+/coverage/
+/tests/_output/
+.phpunit.result.cache
+.phpunit.cache/
+phpunit.xml
+.phpcs-cache
+.php-cs-fixer.cache
+.eslintcache
+.stylelintcache
+
+# --- Logs ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+debug.log
+
+# --- IDE / editors ---
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*~
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- Notes & misc editors ---
+.obsidian/
+.history/
+.zed/
+nbproject/
+*.code-workspace
+
+# --- Patch & merge leftovers ---
+*.orig
+*.rej
+*.bak
+*.tmp
+
+# --- Tooling ---
+composer.phar
+.phpcs.cache
+
+# --- OS ---
+._*
+.directory
