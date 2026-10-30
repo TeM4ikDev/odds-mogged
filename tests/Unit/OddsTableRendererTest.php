@@ -36,7 +36,7 @@ final class OddsTableRendererTest extends TestCase {
 	 *
 	 * @var string[]
 	 */
-	private const SHOWN = array( 'bet365', 'williamhill', 'paddypower' );
+	private const SHOWN = array( 'bet365', 'williamhill', 'betway' );
 
 	/**
 	 * Resets the stores the stubs are backed by.
@@ -141,9 +141,16 @@ final class OddsTableRendererTest extends TestCase {
 	}
 
 	/**
-	 * A configured logo is used, and a monogram stands in when none is set.
+	 * A bundled icon is used when one ships with the plugin.
 	 */
-	public function test_logo_falls_back_to_a_monogram(): void {
+	public function test_bundled_logo_is_used(): void {
+		$this->assertStringContainsString( 'assets/logos/williamhill.png', $this->render() );
+	}
+
+	/**
+	 * An administrator's logo overrides the bundled one.
+	 */
+	public function test_admin_logo_overrides_the_bundled_one(): void {
 		$html = $this->render(
 			array(),
 			array( 'bookmaker_logos' => array( 'bet365' => 'https://example.test/bet365.svg' ) )
@@ -153,9 +160,17 @@ final class OddsTableRendererTest extends TestCase {
 			'<img class="oa-book__logo" src="https://example.test/bet365.svg"',
 			$html
 		);
+		$this->assertStringNotContainsString( 'assets/logos/bet365.png', $html );
+	}
 
-		// William Hill has no logo configured, so it gets its initials.
-		$this->assertStringContainsString( '>WH</span>', $html );
+	/**
+	 * A monogram stands in for bookmakers no icon ships for.
+	 */
+	public function test_monogram_stands_in_without_a_logo(): void {
+		$this->assertMatchesRegularExpression(
+			'#<span class="oa-book__monogram"[^>]*>B</span>#',
+			$this->render()
+		);
 	}
 
 	/**

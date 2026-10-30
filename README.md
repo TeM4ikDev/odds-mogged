@@ -81,9 +81,10 @@ four tabs.
   then the provider, the API key, the bookmaker region and the odds format pages
   open in.
 - *Bookmakers* — tick the bookmakers available site-wide and set the outbound
-  (affiliate) URL and a logo for each. No logos ship with the plugin, since
-  bundling third-party trademarks is not the plugin's to do; a bookmaker without
-  one is drawn as a coloured monogram derived from its id.
+  (affiliate) URL and a logo for each. Icons ship for most of the catalogue in
+  `assets/logos/` and are served from your own site, so the table looks right
+  with nothing configured; anything you enter here overrides them, and a
+  bookmaker with neither is drawn as a coloured monogram derived from its id.
 - *Markets* — enable Match Result (1X2), Over/Under 2.5 Goals and Both Teams to
   Score.
 - *Performance* — cache windows, the upstream fetch interval and the outbound

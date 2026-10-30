@@ -19,38 +19,39 @@ namespace OddsAggregator\Domain;
 final class BookmakerRegistry {
 
 	/**
-	 * Default catalogue: id => [ display name, default outbound URL ].
+	 * Default catalogue: id => [ display name, outbound URL, logo filename ].
 	 *
-	 * The URL is only a starting point; administrators can replace it with
-	 * their own (e.g. affiliate) link on the settings screen.
+	 * The URL and the logo are only starting points; administrators can replace
+	 * either on the settings screen. An empty filename means no icon ships for
+	 * that bookmaker and a monogram is drawn instead.
 	 *
-	 * @var array<string,array{0:string,1:string}>
+	 * @var array<string,array{0:string,1:string,2:string}>
 	 */
 	private const DEFAULTS = array(
-		'bet365'      => array( 'bet365', 'https://www.bet365.com' ),
-		'williamhill' => array( 'William Hill', 'https://www.williamhill.com' ),
-		'paddypower'  => array( 'Paddy Power', 'https://www.paddypower.com' ),
-		'betfair'     => array( 'Betfair', 'https://www.betfair.com' ),
-		'ladbrokes'   => array( 'Ladbrokes', 'https://www.ladbrokes.com' ),
-		'coral'       => array( 'Coral', 'https://www.coral.co.uk' ),
-		'skybet'      => array( 'Sky Bet', 'https://www.skybet.com' ),
-		'unibet'      => array( 'Unibet', 'https://www.unibet.co.uk' ),
-		'betvictor'   => array( 'BetVictor', 'https://www.betvictor.com' ),
-		'betway'      => array( 'Betway', 'https://www.betway.com' ),
+		'bet365'      => array( 'bet365', 'https://www.bet365.com', 'bet365.png' ),
+		'williamhill' => array( 'William Hill', 'https://www.williamhill.com', 'williamhill.png' ),
+		'paddypower'  => array( 'Paddy Power', 'https://www.paddypower.com', 'paddypower.ico' ),
+		'betfair'     => array( 'Betfair', 'https://www.betfair.com', 'betfair.ico' ),
+		'ladbrokes'   => array( 'Ladbrokes', 'https://www.ladbrokes.com', 'ladbrokes.png' ),
+		'coral'       => array( 'Coral', 'https://www.coral.co.uk', 'coral.png' ),
+		'skybet'      => array( 'Sky Bet', 'https://www.skybet.com', 'skybet.ico' ),
+		'unibet'      => array( 'Unibet', 'https://www.unibet.co.uk', 'unibet.png' ),
+		'betvictor'   => array( 'BetVictor', 'https://www.betvictor.com', 'betvictor.png' ),
+		'betway'      => array( 'Betway', 'https://www.betway.com', '' ),
 		// US sportsbooks, as quoted by the Oddschecker US pages.
-		'fanduel'     => array( 'FanDuel', 'https://sportsbook.fanduel.com' ),
-		'draftkings'  => array( 'DraftKings', 'https://sportsbook.draftkings.com' ),
-		'betmgm'      => array( 'BetMGM', 'https://sports.betmgm.com' ),
-		'caesars'     => array( 'Caesars', 'https://www.caesars.com/sportsbook-and-casino' ),
-		'fanatics'    => array( 'Fanatics', 'https://sportsbook.fanatics.com' ),
-		'betrivers'   => array( 'BetRivers', 'https://www.betrivers.com' ),
-		'borgata'     => array( 'Borgata', 'https://sports.borgataonline.com' ),
+		'fanduel'     => array( 'FanDuel', 'https://sportsbook.fanduel.com', 'fanduel.ico' ),
+		'draftkings'  => array( 'DraftKings', 'https://sportsbook.draftkings.com', 'draftkings.png' ),
+		'betmgm'      => array( 'BetMGM', 'https://sports.betmgm.com', 'betmgm.png' ),
+		'caesars'     => array( 'Caesars', 'https://www.caesars.com/sportsbook-and-casino', 'caesars.ico' ),
+		'fanatics'    => array( 'Fanatics', 'https://sportsbook.fanatics.com', 'fanatics.png' ),
+		'betrivers'   => array( 'BetRivers', 'https://www.betrivers.com', 'betrivers.png' ),
+		'borgata'     => array( 'Borgata', 'https://sports.borgataonline.com', '' ),
 		// Offshore books The Odds API returns for the us region.
-		'betonlineag' => array( 'BetOnline.ag', 'https://www.betonline.ag' ),
-		'betus'       => array( 'BetUS', 'https://www.betus.com.pa' ),
-		'bovada'      => array( 'Bovada', 'https://www.bovada.lv' ),
-		'lowvigag'    => array( 'LowVig.ag', 'https://www.lowvig.ag' ),
-		'mybookieag'  => array( 'MyBookie.ag', 'https://www.mybookie.ag' ),
+		'betonlineag' => array( 'BetOnline.ag', 'https://www.betonline.ag', 'betonlineag.png' ),
+		'betus'       => array( 'BetUS', 'https://www.betus.com.pa', 'betus.png' ),
+		'bovada'      => array( 'Bovada', 'https://www.bovada.lv', 'bovada.png' ),
+		'lowvigag'    => array( 'LowVig.ag', 'https://www.lowvig.ag', '' ),
+		'mybookieag'  => array( 'MyBookie.ag', 'https://www.mybookie.ag', 'mybookieag.png' ),
 	);
 
 	/**
@@ -83,13 +84,14 @@ final class BookmakerRegistry {
 
 		$bookmakers = array();
 
-		foreach ( self::DEFAULTS as $id => [ $name, $default_url ] ) {
+		foreach ( self::DEFAULTS as $id => [ $name, $default_url, $default_logo ] ) {
 			// A saved empty string counts as "not set", so the default applies.
 			$override = trim( (string) ( $this->url_overrides[ $id ] ?? '' ) );
+			$logo     = trim( (string) ( $this->logo_overrides[ $id ] ?? '' ) );
 
-			// Logos ship with no default: the plugin bundles no third-party
-			// trademarks, and an unset logo renders as a monogram instead.
-			$logo = trim( (string) ( $this->logo_overrides[ $id ] ?? '' ) );
+			if ( '' === $logo && '' !== $default_logo ) {
+				$logo = ODDS_AGGREGATOR_URL . 'assets/logos/' . $default_logo;
+			}
 
 			$bookmakers[ $id ] = new Bookmaker(
 				$id,

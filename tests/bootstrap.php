@@ -12,6 +12,10 @@ declare(strict_types=1);
 
 require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
+if ( ! defined( 'ODDS_AGGREGATOR_URL' ) ) {
+	define( 'ODDS_AGGREGATOR_URL', 'https://example.test/wp-content/plugins/odds-aggregator/' );
+}
+
 if ( ! function_exists( 'apply_filters' ) ) {
 	/**
 	 * Stub: returns the filtered value unchanged.

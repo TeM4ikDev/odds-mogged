@@ -338,9 +338,13 @@ Two settings are maps keyed by bookmaker id rather than scalars:
 `bookmaker_urls` and `bookmaker_logos`. They sanitise identically - every value
 through `esc_url_raw()`, empty values dropped - so they share one `case` in
 `Settings::sanitize_field()`. A blank entry means "not set", and the catalogue
-falls back: to the bookmaker's own homepage for a URL, and to a generated
-monogram for a logo. No logo ships with the plugin, because bundling
-third-party trademarks is not the plugin's to do.
+falls back: to the bookmaker's own homepage for a URL, and for a logo to the
+icon bundled in `assets/logos/`, or a generated monogram when none ships.
+
+Icons are served from the site's own copy of the plugin rather than hotlinked,
+so a visitor's browser contacts no third party and nothing breaks if an icon
+service disappears. A bookmaker gains an icon by dropping a file in that
+directory and naming it in the third slot of `BookmakerRegistry::DEFAULTS`.
 
 ---
 
