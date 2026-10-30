@@ -567,15 +567,36 @@ final class SettingsPage {
 				<?php endif; ?>
 			</tbody>
 		</table>
-		<form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
-			<input type="hidden" name="action" value="odds_aggregator_test_source" />
-			<?php wp_nonce_field( 'odds_aggregator_test_source' ); ?>
-			<?php submit_button( __( 'Test connection', 'odds-aggregator' ), 'secondary', 'submit', false ); ?>
+		<p>
+			<a class="button button-secondary" href="<?php echo esc_url( $this->test_url() ); ?>">
+				<?php echo esc_html__( 'Test connection', 'odds-aggregator' ); ?>
+			</a>
 			<span class="description">
 				<?php echo esc_html__( 'Fetches once from the configured source. On a metered feed this spends credits.', 'odds-aggregator' ); ?>
 			</span>
-		</form>
+		</p>
 		<?php
+	}
+
+	/**
+	 * Nonced URL that triggers a connection test.
+	 *
+	 * A link rather than a form: this panel is rendered by the Settings API
+	 * inside the settings form, and a nested form is dropped by the parser
+	 * while its fields stay behind, overriding the action and nonce the
+	 * settings form needs to save.
+	 *
+	 * @return string
+	 */
+	private function test_url(): string {
+		return wp_nonce_url(
+			add_query_arg(
+				'action',
+				'odds_aggregator_test_source',
+				admin_url( 'admin-post.php' )
+			),
+			'odds_aggregator_test_source'
+		);
 	}
 
 	/**

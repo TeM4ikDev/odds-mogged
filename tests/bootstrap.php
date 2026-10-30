@@ -178,25 +178,60 @@ if ( ! function_exists( 'add_query_arg' ) ) {
 	/**
 	 * Stub: appends url-encoded arguments, as WordPress does.
 	 *
+	 * Supports both of core's signatures: an array of pairs plus a URL, and a
+	 * single key, value and URL.
+	 *
 	 * Encoding matters here - a provider that pre-encodes a value would send a
 	 * literal "%2C" instead of a comma, and a test should be able to see that.
 	 *
-	 * @param array<string,mixed> $args Query arguments.
-	 * @param string              $url  Base URL.
+	 * @param mixed ...$args Either ( array $pairs, string $url ) or ( string $key, mixed $value, string $url ).
 	 * @return string
 	 */
-	function add_query_arg( array $args, string $url = '' ): string {
-		$pairs = array();
-
-		foreach ( $args as $name => $value ) {
-			$pairs[] = urlencode( (string) $name ) . '=' . urlencode( (string) $value );
+	function add_query_arg( ...$args ): string {
+		if ( is_array( $args[0] ) ) {
+			$pairs = $args[0];
+			$url   = (string) ( $args[1] ?? '' );
+		} else {
+			$pairs = array( (string) $args[0] => $args[1] ?? '' );
+			$url   = (string) ( $args[2] ?? '' );
 		}
 
-		if ( array() === $pairs ) {
+		$parts = array();
+
+		foreach ( $pairs as $name => $value ) {
+			$parts[] = urlencode( (string) $name ) . '=' . urlencode( (string) $value );
+		}
+
+		if ( array() === $parts ) {
 			return $url;
 		}
 
-		return $url . ( str_contains( $url, '?' ) ? '&' : '?' ) . implode( '&', $pairs );
+		return $url . ( str_contains( $url, '?' ) ? '&' : '?' ) . implode( '&', $parts );
+	}
+}
+
+if ( ! function_exists( 'admin_url' ) ) {
+	/**
+	 * Stub: an admin URL on the fixed site.
+	 *
+	 * @param string $path Appended path.
+	 * @return string
+	 */
+	function admin_url( string $path = '' ): string {
+		return 'https://example.test/wp-admin/' . $path;
+	}
+}
+
+if ( ! function_exists( 'wp_nonce_url' ) ) {
+	/**
+	 * Stub: appends a fixed nonce.
+	 *
+	 * @param string $url    URL to sign.
+	 * @param string $action Nonce action.
+	 * @return string
+	 */
+	function wp_nonce_url( string $url, string $action = '-1' ): string {
+		return $url . ( str_contains( $url, '?' ) ? '&' : '?' ) . '_wpnonce=test';
 	}
 }
 

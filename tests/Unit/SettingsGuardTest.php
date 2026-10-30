@@ -102,6 +102,25 @@ final class SettingsGuardTest extends TestCase {
 	}
 
 	/**
+	 * The status panel must not put fields into the settings form.
+	 *
+	 * It is rendered by the Settings API inside that form. A nested form is
+	 * dropped by the parser while its fields stay behind, and an `action` or
+	 * `_wpnonce` left there overrides the ones options.php needs, so saving
+	 * any setting fails.
+	 */
+	public function test_status_panel_adds_no_fields_to_the_settings_form(): void {
+		ob_start();
+		$this->page( new Settings() )->render_status();
+		$html = (string) ob_get_clean();
+
+		$this->assertStringNotContainsString( '<form', $html );
+		$this->assertStringNotContainsString( 'name="action"', $html );
+		$this->assertStringNotContainsString( 'name="_wpnonce"', $html );
+		$this->assertStringContainsString( 'admin-post.php', $html );
+	}
+
+	/**
 	 * A key and the source that needs it can be saved together.
 	 *
 	 * Before the fix the guard probed the stored settings, saw the empty key the
