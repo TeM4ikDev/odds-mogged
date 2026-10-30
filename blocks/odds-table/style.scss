@@ -213,13 +213,13 @@
 		}
 	}
 
-	// Fixed box with object-fit, because administrators supply their own files
-	// and nothing guarantees two logos share an aspect ratio.
+	// Same square as the monogram, so names line up whether a row has an icon
+	// or not. object-fit keeps a logo of any proportion inside it.
 	.oa-book__logo {
 		flex: 0 0 auto;
 		height: 1.75rem;
 		object-fit: contain;
-		width: 3.5rem;
+		width: 1.75rem;
 	}
 
 	// Hue arrives inline from PHP, derived from the bookmaker id so a brand
