@@ -512,7 +512,7 @@ dark ones included.
 ## 12. Testing and quality
 
 ```bash
-composer test     # 123 unit tests
+composer test     # 126 unit tests
 composer lint     # WPCS
 ```
 

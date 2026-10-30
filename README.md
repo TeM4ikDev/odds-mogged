@@ -231,7 +231,7 @@ one write. DOCS.md §5 goes into each.
 ## Tests
 
 ```bash
-composer test     # 123 tests
+composer test     # 126 tests
 composer lint     # WordPress Coding Standards
 ```
 
